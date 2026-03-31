@@ -1,4 +1,6 @@
 import React from 'react';
+import logoLight from '../assets/HRMLogo.png';
+import logoDark from '../assets/DMLogo.png';
 
 const NavItem = ({ icon, label, id, onClick, activeId, mini }) => {
   const active = activeId === id;
@@ -13,7 +15,7 @@ const NavItem = ({ icon, label, id, onClick, activeId, mini }) => {
   );
 };
 
-export default function Sidebar({ currentPage, onNav, onLogout, mini, mobileOpen }) {
+export default function Sidebar({ currentPage, onNav, onLogout, mini, mobileOpen, isDark }) {
   let cls = 'sidebar';
   if (mini) cls += ' mini';
   if (mobileOpen) cls += ' mobile-open';
@@ -32,11 +34,27 @@ export default function Sidebar({ currentPage, onNav, onLogout, mini, mobileOpen
 
   return (
     <aside className={cls} id="sidebar">
-      <div className="sidebar-logo">
-        <div className="logo-icon">P</div>
-        <div className="logo-text">
-          <h2 className="mb-0">PeopleOS</h2>
-          <p className="mb-0 text-muted" style={{ fontSize: '0.68rem' }}>HR Management</p>
+      <div className="sidebar-logo" style={{ padding: '10px 20px', display: 'flex', alignItems: 'center', minHeight: '80px' }}>
+        <img 
+          src={isDark ? logoDark : logoLight} 
+          alt="HRM Logo" 
+          style={{ height: '42px', width: 'auto', objectFit: 'contain' }} 
+          onError={(e) => {
+            e.target.style.display = 'none';
+            if (document.getElementById('fallback-logo')) {
+              document.getElementById('fallback-logo').style.display = 'flex';
+            }
+          }} 
+        />
+        {/* Fallback styling that EXACTLY matches the text colors and layout of the provided logo if the image isn't loaded */}
+        <div id="fallback-logo" style={{ display: 'none', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', fontWeight: 900, fontSize: '32px', letterSpacing: '-0.5px', lineHeight: 1 }}>
+            <span style={{ color: isDark ? '#FFFFFF' : '#003B71' }}>HR</span>
+            <span style={{ color: isDark ? '#FFFFFF' : '#FFC107' }}>M</span>
+          </div>
+          <div style={{ color: isDark ? '#94A3B8' : '#64748B', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.5px', marginTop: '2px' }}>
+            HR MANAGEMENT
+          </div>
         </div>
       </div>
       <nav className="nav-list">

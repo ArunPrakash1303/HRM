@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { candidates, stageColors, jobOpenings } from '../data';
 import { hex2rgba } from '../utils/colors';
 
-export default function Recruitment() {
+export default function Recruitment({ onNav, context }) {
   const [activeTab, setActiveTab] = useState('kanban');
+  const [jobList, setJobList] = useState(jobOpenings);
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [jobForm, setJobForm] = useState({ title: '', dept: 'Engineering', location: '', type: 'Full-time', openings: 1, desc: '' });
+
+  useEffect(() => {
+    if (context && context.openModal) {
+      if (context.tab) setActiveTab(context.tab);
+      setIsJobModalOpen(true);
+    }
+  }, [context]);
 
   const renderKanban = () => {
     const stages = ['Applied', 'Shortlisted', 'Interview', 'Selected', 'Rejected'];
@@ -87,7 +98,7 @@ export default function Recruitment() {
 
   const renderJobs = () => (
     <div className="grid grid-2">
-      {jobOpenings.map(j => (
+      {jobList.map(j => (
         <div className="card card-hover p-5" key={j.id}>
           <div className="flex justify-between items-start mb-2">
             <div style={{ flex: 1 }}>
@@ -104,7 +115,7 @@ export default function Recruitment() {
             <div className={`chip chip-${j.status.toLowerCase()}`}>{j.status}</div>
           </div>
           <div className="flex gap-2 flex-wrap items-center mt-3">
-            <div className="chip" style={{ background: 'rgba(26,35,126,0.08)', color: 'var(--primary)' }}>{j.type}</div>
+            <div className="chip" style={{ background: 'var(--primary-subtle)', color: 'var(--primary)' }}>{j.type}</div>
             <div className="chip" style={{ background: 'rgba(0,0,0,0.05)', color: 'var(--text-sec)' }}>{j.openings} openings</div>
             <div className="flex items-center gap-1 text-xs text-sec" style={{ marginLeft: 'auto' }}>
               <span className="material-icons" style={{ fontSize: '14px' }}>people</span>{j.applicants} applicants
@@ -127,7 +138,7 @@ export default function Recruitment() {
           <h1>Recruitment</h1>
           <p>Manage job openings and candidates</p>
         </div>
-        <button className="btn btn-primary btn-sm">
+        <button className="btn btn-primary btn-sm" onClick={() => setIsJobModalOpen(true)}>
           <span className="material-icons" style={{ fontSize: '16px' }}>add</span> New Job
         </button>
       </div>
@@ -174,6 +185,68 @@ export default function Recruitment() {
       {activeTab === 'kanban' && renderKanban()}
       {activeTab === 'candlist' && renderCandidateList()}
       {activeTab === 'jobs' && renderJobs()}
+
+      {isJobModalOpen && createPortal(
+        <div className="modal-bg open" style={{ display: 'flex' }}>
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Create New Job Opening</h3>
+              <button className="icon-btn" onClick={() => setIsJobModalOpen(false)}><span className="material-icons">close</span></button>
+            </div>
+            <div className="modal-body">
+              <div className="form-grid">
+                <div className="form-group-m form-full">
+                  <label>Job Title</label>
+                  <input placeholder="e.g. Senior Frontend Developer" value={jobForm.title} onChange={e=>setJobForm({...jobForm, title: e.target.value})} />
+                </div>
+                <div className="form-group-m">
+                  <label>Department</label>
+                  <select value={jobForm.dept} onChange={e=>setJobForm({...jobForm, dept: e.target.value})}>
+                    <option>Engineering</option>
+                    <option>Product</option>
+                    <option>Design</option>
+                  </select>
+                </div>
+                <div className="form-group-m">
+                  <label>Location</label>
+                  <input placeholder="e.g. Chennai / Remote" value={jobForm.location} onChange={e=>setJobForm({...jobForm, location: e.target.value})}/>
+                </div>
+                <div className="form-group-m">
+                  <label>Job Type</label>
+                  <select value={jobForm.type} onChange={e=>setJobForm({...jobForm, type: e.target.value})}>
+                    <option>Full-time</option>
+                    <option>Contract</option>
+                    <option>Internship</option>
+                  </select>
+                </div>
+                <div className="form-group-m">
+                  <label>Openings</label>
+                  <input type="number" value={jobForm.openings} onChange={e=>setJobForm({...jobForm, openings: e.target.value})} />
+                </div>
+                <div className="form-group-m form-full">
+                  <label>Description</label>
+                  <textarea rows="3" placeholder="Job description..." value={jobForm.desc} onChange={e=>setJobForm({...jobForm, desc: e.target.value})}></textarea>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline btn-sm" onClick={() => setIsJobModalOpen(false)}>Cancel</button>
+              <button className="btn btn-primary btn-sm" onClick={() => {
+                const title = jobForm.title || 'New Job Position';
+                const newJob = {
+                  id: Date.now(), title: title, dept: jobForm.dept, location: jobForm.location || 'Remote',
+                  type: jobForm.type, openings: parseInt(jobForm.openings)||1, applicants: 0, status: 'Active'
+                };
+                jobOpenings.unshift(newJob);
+                setJobList([...jobOpenings]);
+                setIsJobModalOpen(false);
+                setJobForm({ title: '', dept: 'Engineering', location: '', type: 'Full-time', openings: 1, desc: '' });
+              }}>Create Job</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

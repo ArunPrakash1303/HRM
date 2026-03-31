@@ -1,19 +1,111 @@
 import React from 'react';
 import { hiringData, deptData2, retData } from '../data';
 import { hex2rgba } from '../utils/colors';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+import { Bar, Line } from 'react-chartjs-2';
 
-export default function Reports() {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export default function Reports({ isDark }) {
   const maxHiring = 90;
   const maxRet = 100;
   const minRet = 88;
   const totalDept = deptData2.reduce((s, d) => s + d.c, 0);
   const funnel = [
-    { s: 'Applied', v: 90, c: '#1A237E' },
+    { s: 'Applied', v: 90, c: 'var(--primary)' },
     { s: 'Shortlisted', v: 52, c: '#3B82F6' },
     { s: 'Interview', v: 31, c: '#8B5CF6' },
     { s: 'Offer', v: 18, c: '#10B981' },
     { s: 'Joined', v: 14, c: '#F59E0B' }
   ];
+
+  const textColor = isDark ? '#F8FAFC' : '#1E293B';
+  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+  const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#FF7A28';
+
+  const hiringChartData = {
+    labels: hiringData.map(d => d.m),
+    datasets: [
+      {
+        label: 'Applications',
+        data: hiringData.map(d => d.a),
+        backgroundColor: hex2rgba(primaryColor, 0.2),
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
+      },
+      {
+        label: 'Hires',
+        data: hiringData.map(d => d.h),
+        backgroundColor: primaryColor,
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
+      }
+    ]
+  };
+
+  const retChartData = {
+    labels: retData.map(d => d.m),
+    datasets: [
+      {
+        label: 'Retention Rate',
+        data: retData.map(d => d.r),
+        borderColor: '#10B981',
+        backgroundColor: hex2rgba('#10B981', 0.2),
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#10B981'
+      }
+    ]
+  };
+
+  const commonOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: isDark ? '#1E293B' : '#FFFFFF',
+        titleColor: textColor,
+        bodyColor: textColor,
+        borderColor: gridColor,
+        borderWidth: 1,
+        padding: 10,
+        usePointStyle: true
+      }
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 } }
+      },
+      y: {
+        grid: { color: gridColor },
+        border: { display: false },
+        ticks: { color: textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 10 } }
+      }
+    }
+  };
 
   return (
     <div>
@@ -30,8 +122,8 @@ export default function Reports() {
 
       <div className="grid grid-4 mb-4">
         <div className="card card-hover stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(26,35,126,0.1)' }}>
-            <span className="material-icons" style={{ color: '#1A237E' }}>people</span>
+          <div className="stat-icon" style={{ background: 'var(--primary-subtle)' }}>
+            <span className="material-icons" style={{ color: 'var(--primary)' }}>people</span>
           </div>
           <div className="stat-value">73</div>
           <div className="stat-label">Total Hires (Year)</div>
@@ -64,18 +156,10 @@ export default function Reports() {
       </div>
 
       <div className="grid-21 mb-4">
-        <div className="card p-5">
+        <div className="card p-5" style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="section-title">Hiring Trend (Applications vs Hires)</div>
-          <div className="bar-chart" style={{ height: '160px' }}>
-            {hiringData.map((d, i) => (
-              <div className="bar-group" key={i}>
-                <div className="bar" style={{ height: `${(d.a / maxHiring) * 140}px`, width: '45%', background: 'rgba(26,35,126,0.22)', borderRadius: '4px 4px 0 0' }}></div>
-                <div className="bar" style={{ height: `${(d.h / maxHiring) * 140}px`, width: '45%', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>
-              </div>
-            ))}
-          </div>
-          <div className="chart-labels">
-            {hiringData.map((d, i) => <div className="chart-label" key={i}>{d.m}</div>)}
+          <div style={{ flex: 1, minHeight: '180px', width: '100%' }}>
+            <Bar data={hiringChartData} options={commonOptions} />
           </div>
         </div>
         
@@ -114,17 +198,10 @@ export default function Reports() {
           </div>
         </div>
         
-        <div className="card p-5">
-          <div className="section-title">Retention Rate Trend</div>
-          <div className="bar-chart" style={{ height: '160px' }}>
-            {retData.map((d, i) => (
-              <div className="bar-group" key={i}>
-                <div className="bar" style={{ height: `${((d.r - minRet) / (maxRet - minRet)) * 130 + 10}px`, width: '100%', background: '#10B981', borderRadius: '4px 4px 0 0', opacity: 0.8 }}></div>
-              </div>
-            ))}
-          </div>
-          <div className="chart-labels">
-            {retData.map((d, i) => <div className="chart-label" key={i}>{d.m}</div>)}
+        <div className="card p-5" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="section-title">Retention Rate Trend (%)</div>
+          <div style={{ flex: 1, minHeight: '180px', width: '100%' }}>
+            <Line data={retChartData} options={{ ...commonOptions, scales: { ...commonOptions.scales, y: { ...commonOptions.scales.y, min: 80, max: 100 } } }} />
           </div>
         </div>
       </div>

@@ -4,11 +4,12 @@ import { hex2rgba } from '../utils/colors';
 
 export default function Documents() {
   const [activeFolder, setActiveFolder] = useState('All Files');
+  const [docList, setDocList] = useState(documents2);
   const folders = ['All Files', 'Policies', 'Templates', 'Reports', 'General'];
 
   const filteredDocs = activeFolder === 'All Files' 
-    ? documents2 
-    : documents2.filter(d => d.folder === activeFolder);
+    ? docList 
+    : docList.filter(d => d.folder === activeFolder);
 
   return (
     <div>
@@ -43,7 +44,7 @@ export default function Documents() {
                 <span className="material-icons" style={{ fontSize: '18px' }}>folder</span>
                 <span style={{ flex: 1, fontSize: '0.82rem' }}>{f}</span>
                 <span className="chip" style={{ height: '18px', fontSize: '0.65rem', padding: '2px 6px' }}>
-                  {f === 'All Files' ? documents2.length : documents2.filter(d => d.folder === f).length}
+                  {f === 'All Files' ? docList.length : docList.filter(d => d.folder === f).length}
                 </span>
               </div>
             ))}
@@ -70,7 +71,11 @@ export default function Documents() {
                     <button className="icon-btn" title="Download">
                       <span className="material-icons" style={{ fontSize: '15px' }}>download</span>
                     </button>
-                    <button className="icon-btn" style={{ color: '#EF4444' }} title="Delete">
+                    <button className="icon-btn" style={{ color: '#EF4444' }} title="Delete" onClick={() => {
+                      const idx = documents2.findIndex(doc => doc.id === d.id);
+                      if (idx > -1) documents2.splice(idx, 1);
+                      setDocList([...documents2]);
+                    }}>
                       <span className="material-icons" style={{ fontSize: '15px' }}>delete</span>
                     </button>
                   </div>

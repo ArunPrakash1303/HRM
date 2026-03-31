@@ -10,7 +10,7 @@ export default function Settings({ isDark, setTheme }) {
     offerAcc: true,
     weeklyRep: true
   });
-  const [primaryColor, setPrimaryColor] = useState('#1A237E');
+  const [primaryColor, setPrimaryColor] = useState('#FF7A28');
 
   const showSaveToast = () => {
     setToastVisible(true);
@@ -30,7 +30,7 @@ export default function Settings({ isDark, setTheme }) {
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem' }}>Arun Prakash</div>
           <div className="text-sm text-sec">HR Manager</div>
-          <div className="chip" style={{ background: 'rgba(26,35,126,0.08)', color: 'var(--primary)', marginTop: '4px' }}>Human Resources</div>
+          <div className="chip" style={{ background: 'var(--primary-subtle)', color: 'var(--primary)', marginTop: '4px' }}>Human Resources</div>
         </div>
       </div>
       <div className="form-grid">
@@ -109,7 +109,7 @@ export default function Settings({ isDark, setTheme }) {
   };
 
   const renderAppearance = () => {
-    const colors = ['#1A237E', '#0D47A1', '#1565C0', '#0277BD', '#00695C', '#2E7D32'];
+    const colors = ['#FF7A28', '#0D47A1', '#1565C0', '#0277BD', '#00695C', '#2E7D32'];
     return (
       <div className="card p-6">
         <div className="section-title">Theme Mode</div>

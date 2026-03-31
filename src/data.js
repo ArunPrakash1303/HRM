@@ -10,7 +10,7 @@ const employees = [
   {id:7,name:'Anjali Krishnan',role:'Marketing Lead',dept:'Marketing',email:'anjali@peopleos.com',status:'Active',avatar:'AK',joinDate:'2022-06-20',location:'Bangalore'},
   {id:8,name:'Deepak Pandey',role:'DevOps Engineer',dept:'Engineering',email:'deepak@peopleos.com',status:'Inactive',avatar:'DP',joinDate:'2019-12-03',location:'Pune'},
 ];
-const deptColors={'Engineering':'#1A237E','Product':'#8B5CF6','Design':'#EC4899','Analytics':'#F59E0B','Human Resources':'#10B981','Marketing':'#3B82F6'};
+const deptColors={'Engineering':'#FF7A28','Product':'#8B5CF6','Design':'#EC4899','Analytics':'#F59E0B','Human Resources':'#10B981','Marketing':'#3B82F6'};
 const candidates=[
   {id:1,name:'Arun Kumar',role:'Full Stack Developer',stage:'Interview',score:85,avatar:'AK',experience:'4 years'},
   {id:2,name:'Meera Iyer',role:'UI/UX Designer',stage:'Shortlisted',score:78,avatar:'MI',experience:'3 years'},
@@ -43,7 +43,7 @@ const jobOpenings=[
   {id:4,title:'Marketing Specialist',dept:'Marketing',location:'Mumbai',type:'Contract',openings:1,applicants:12,status:'Paused'},
 ];
 const hiringData=[{m:'Aug',a:45,h:8},{m:'Sep',a:62,h:12},{m:'Oct',a:58,h:10},{m:'Nov',a:75,h:15},{m:'Dec',a:48,h:7},{m:'Jan',a:90,h:18}];
-const deptData2=[{d:'Engineering',c:28,color:'#1A237E'},{d:'Product',c:10,color:'#8B5CF6'},{d:'Design',c:8,color:'#EC4899'},{d:'Marketing',c:12,color:'#3B82F6'},{d:'HR',c:5,color:'#10B981'},{d:'Analytics',c:7,color:'#F59E0B'}];
+const deptData2=[{d:'Engineering',c:28,color:'#FF7A28'},{d:'Product',c:10,color:'#8B5CF6'},{d:'Design',c:8,color:'#EC4899'},{d:'Marketing',c:12,color:'#3B82F6'},{d:'HR',c:5,color:'#10B981'},{d:'Analytics',c:7,color:'#F59E0B'}];
 const retData=[{m:'Jul',r:94},{m:'Aug',r:96},{m:'Sep',r:95},{m:'Oct',r:97},{m:'Nov',r:95},{m:'Dec',r:98},{m:'Jan',r:97}];
 const codeSnippets={
   javascript:`// Two Sum Problem

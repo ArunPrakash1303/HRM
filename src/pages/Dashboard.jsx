@@ -1,14 +1,33 @@
 import React from 'react';
 import { hiringData, employees, deptColors } from '../data';
 import { hex2rgba } from '../utils/colors';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
-export default function Dashboard({ onNav }) {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export default function Dashboard({ onNav, isDark }) {
   const renderTeamList = () => {
     return employees.slice(0, 5).map(e => (
       <div className="team-item" key={e.id}>
         <div 
           className="emp-avatar" 
-          style={{ background: hex2rgba(deptColors[e.dept] || '#1A237E', 0.12), color: deptColors[e.dept] || '#1A237E' }}
+          style={{ background: deptColors[e.dept] ? hex2rgba(deptColors[e.dept], 0.12) : 'var(--primary-subtle)', color: deptColors[e.dept] || 'var(--primary)' }}
         >
           {e.avatar}
         </div>
@@ -24,37 +43,84 @@ export default function Dashboard({ onNav }) {
   };
 
   const HiringChart = () => {
-    const max = 90;
+    const textColor = isDark ? '#F8FAFC' : '#1E293B';
+    const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#FF7A28';
+    
+    const data = {
+      labels: hiringData.map(d => d.m),
+      datasets: [
+        {
+          label: 'Applications',
+          data: hiringData.map(d => d.a),
+          backgroundColor: hex2rgba(primaryColor, 0.2),
+          borderRadius: 4,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8
+        },
+        {
+          label: 'Hires',
+          data: hiringData.map(d => d.h),
+          backgroundColor: primaryColor,
+          borderRadius: 4,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8
+        }
+      ]
+    };
+
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: isDark ? '#1E293B' : '#FFFFFF',
+          titleColor: textColor,
+          bodyColor: textColor,
+          borderColor: gridColor,
+          borderWidth: 1,
+          padding: 10,
+          boxPadding: 4,
+          usePointStyle: true
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } },
+          title: { display: true, text: 'Month', color: textColor, font: { weight: 'bold' } }
+        },
+        y: {
+          grid: { color: gridColor },
+          border: { display: false },
+          ticks: { color: textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 }, stepSize: 20 },
+          title: { display: true, text: 'Count', color: textColor, font: { weight: 'bold' } },
+          min: 0,
+          max: 100
+        }
+      }
+    };
+
     return (
-      <div className="card p-5">
+      <div className="card p-5" style={{ display: 'flex', flexDirection: 'column' }}>
         <div className="flex justify-between items-center mb-3">
           <div className="section-title" style={{ marginBottom: 0 }}>Hiring Overview</div>
           <button className="btn btn-outline btn-sm" onClick={() => onNav('reports')}>View report →</button>
         </div>
         
-        <div className="bar-chart">
-          {hiringData.map((d, i) => (
-            <div className="bar-group" key={i}>
-              <div className="bar" style={{ height: `${(d.a / max) * 140}px`, width: '50%', background: 'rgba(26,35,126,0.22)', borderRadius: '4px 4px 0 0' }}></div>
-              <div className="bar" style={{ height: `${(d.h / max) * 140}px`, width: '50%', background: 'var(--primary)', borderRadius: '4px 4px 0 0' }}></div>
-            </div>
-          ))}
+        <div style={{ flex: 1, minHeight: '200px', width: '100%' }}>
+          <Bar data={data} options={options} />
         </div>
         
-        <div className="chart-labels">
-          {hiringData.map((d, i) => (
-            <div className="chart-label" key={i}>{d.m}</div>
-          ))}
-        </div>
-        
-        <div className="flex gap-3 mt-2">
+        <div className="flex gap-3 justify-center mt-3">
           <div className="flex items-center gap-2">
-            <div style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'rgba(26,35,126,0.25)' }}></div>
-            <span className="text-xs text-sec">Applications</span>
+            <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: hex2rgba(primaryColor, 0.2) }}></div>
+            <span className="text-xs font-semibold" style={{ color: textColor }}>Applications</span>
           </div>
           <div className="flex items-center gap-2">
-            <div style={{ width: '10px', height: '10px', borderRadius: '2px', background: 'var(--primary)' }}></div>
-            <span className="text-xs text-sec">Hires</span>
+            <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: primaryColor }}></div>
+            <span className="text-xs font-semibold" style={{ color: textColor }}>Hires</span>
           </div>
         </div>
       </div>
@@ -74,8 +140,8 @@ export default function Dashboard({ onNav }) {
       {/* Stats */}
       <div className="grid grid-4 mb-4">
         <div className="card card-hover stat-card">
-          <div className="stat-icon" style={{ background: 'rgba(26,35,126,0.1)' }}>
-            <span className="material-icons" style={{ color: '#1A237E' }}>people</span>
+          <div className="stat-icon" style={{ background: 'var(--primary-subtle)' }}>
+            <span className="material-icons" style={{ color: 'var(--primary)' }}>people</span>
           </div>
           <div className="stat-value">8</div>
           <div className="stat-label">Total Employees</div>
@@ -116,11 +182,11 @@ export default function Dashboard({ onNav }) {
         <div className="card p-5">
           <div className="section-title">Quick Actions</div>
           <div className="quick-actions">
-            <div className="qa-item" onClick={() => onNav('employees')}>
-              <div className="qa-icon" style={{ background: 'rgba(26,35,126,0.1)' }}><span className="material-icons" style={{ color: '#1A237E', fontSize: '18px' }}>person_add</span></div>
+            <div className="qa-item" onClick={() => onNav('employees', { openModal: true })}>
+              <div className="qa-icon" style={{ background: 'var(--primary-subtle)' }}><span className="material-icons" style={{ color: 'var(--primary)', fontSize: '18px' }}>person_add</span></div>
               <div className="qa-label">Add Employee</div>
             </div>
-            <div className="qa-item" onClick={() => onNav('interviews')}>
+            <div className="qa-item" onClick={() => onNav('interviews', { openModal: true })}>
               <div className="qa-icon" style={{ background: 'rgba(139,92,246,0.1)' }}><span className="material-icons" style={{ color: '#8B5CF6', fontSize: '18px' }}>schedule</span></div>
               <div className="qa-label">Schedule Interview</div>
             </div>
@@ -136,7 +202,7 @@ export default function Dashboard({ onNav }) {
               <div className="qa-icon" style={{ background: 'rgba(59,130,246,0.1)' }}><span className="material-icons" style={{ color: '#3B82F6', fontSize: '18px' }}>description</span></div>
               <div className="qa-label">Documents</div>
             </div>
-            <div className="qa-item" onClick={() => onNav('recruitment')}>
+            <div className="qa-item" onClick={() => onNav('recruitment', { openModal: true, tab: 'jobs' })}>
               <div className="qa-icon" style={{ background: 'rgba(239,68,68,0.1)' }}><span className="material-icons" style={{ color: '#EF4444', fontSize: '18px' }}>work_outline</span></div>
               <div className="qa-label">Recruitment</div>
             </div>
@@ -155,7 +221,7 @@ export default function Dashboard({ onNav }) {
           </div>
           
           <div className="interview-item">
-            <div className="emp-avatar" style={{ background: 'rgba(26,35,126,0.12)', color: '#1A237E' }}>AK</div>
+            <div className="emp-avatar" style={{ background: 'var(--primary-subtle)', color: 'var(--primary)' }}>AK</div>
             <div className="flex-1">
               <div className="font-semibold text-sm">Arun Kumar</div>
               <div className="text-xs text-sec">Full Stack Developer · Technical</div>

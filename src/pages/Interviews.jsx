@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { interviews2 } from '../data';
 import { hex2rgba } from '../utils/colors';
 
-export default function Interviews({ onNav }) {
+export default function Interviews({ onNav, context }) {
+  const [interviewList, setInterviewList] = useState(interviews2);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form, setForm] = useState({ candidate: '', role: '', type: 'Technical', date: '', time: '', interviewer: '' });
+
+  useEffect(() => {
+    if (context && context.openModal) {
+      setIsModalOpen(true);
+    }
+  }, [context]);
+
   const statuses = ['Scheduled', 'Pending', 'Completed'];
   const statusColors = { Scheduled: '#3B82F6', Pending: '#F59E0B', Completed: '#10B981' };
   const statusIcons = { Scheduled: 'schedule', Pending: 'event_note', Completed: 'check_circle' };
@@ -19,7 +30,7 @@ export default function Interviews({ onNav }) {
           <button className="btn btn-outline btn-sm" onClick={() => onNav('liveinterview')}>
             <span className="material-icons" style={{ fontSize: '16px' }}>videocam</span> Live Interview
           </button>
-          <button className="btn btn-primary btn-sm">
+          <button className="btn btn-primary btn-sm" onClick={() => setIsModalOpen(true)}>
             <span className="material-icons" style={{ fontSize: '16px' }}>add</span> Schedule
           </button>
         </div>
@@ -27,7 +38,7 @@ export default function Interviews({ onNav }) {
 
       <div className="grid grid-3">
         {statuses.map(status => {
-          const items = interviews2.filter(i => i.status === status);
+          const items = interviewList.filter(i => i.status === status);
           return (
             <div key={status}>
               <div className="flex items-center gap-2 mb-3">
@@ -74,7 +85,11 @@ export default function Interviews({ onNav }) {
                         </span> 
                         {iv.type === 'Live Coding' ? 'Start Coding' : 'Join'}
                       </button>
-                      <button className="btn btn-danger btn-sm" style={{ padding: '6px 10px' }}>
+                      <button className="btn btn-danger btn-sm" style={{ padding: '6px 10px' }} onClick={() => {
+                        const idx = interviews2.findIndex(interview => interview.id === iv.id);
+                        if(idx > -1) interviews2.splice(idx, 1);
+                        setInterviewList([...interviews2]);
+                      }}>
                         <span className="material-icons" style={{ fontSize: '14px' }}>cancel</span>
                       </button>
                     </div>
@@ -87,6 +102,72 @@ export default function Interviews({ onNav }) {
           );
         })}
       </div>
+
+      {isModalOpen && createPortal(
+        <div className="modal-bg open" style={{ display: 'flex' }}>
+          <div className="modal">
+            <div className="modal-header">
+              <h3>Schedule Interview</h3>
+              <button className="icon-btn" onClick={() => setIsModalOpen(false)}><span className="material-icons">close</span></button>
+            </div>
+            <div className="modal-body">
+              <div className="form-grid">
+                <div className="form-group-m">
+                  <label>Candidate Name</label>
+                  <input placeholder="Candidate name" value={form.candidate} onChange={e=>setForm({...form, candidate: e.target.value})}/>
+                </div>
+                <div className="form-group-m">
+                  <label>Job Role</label>
+                  <input placeholder="Applied role" value={form.role} onChange={e=>setForm({...form, role: e.target.value})} />
+                </div>
+                <div className="form-group-m">
+                  <label>Interview Type</label>
+                  <select value={form.type} onChange={e=>setForm({...form, type: e.target.value})}>
+                    <option>Technical</option>
+                    <option>HR Round</option>
+                    <option>Live Coding</option>
+                    <option>Culture Fit</option>
+                  </select>
+                </div>
+                <div className="form-group-m">
+                  <label>Interviewer</label>
+                  <input placeholder="Interviewer name" value={form.interviewer} onChange={e=>setForm({...form, interviewer: e.target.value})} />
+                </div>
+                <div className="form-group-m">
+                  <label>Date</label>
+                  <input type="date" value={form.date} onChange={e=>setForm({...form, date: e.target.value})} />
+                </div>
+                <div className="form-group-m">
+                  <label>Time</label>
+                  <input type="time" value={form.time} onChange={e=>setForm({...form, time: e.target.value})} />
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-outline btn-sm" onClick={() => setIsModalOpen(false)}>Cancel</button>
+              <button className="btn btn-primary btn-sm" onClick={() => {
+                const candidateName = form.candidate || 'New Candidate';
+                const newInterview = {
+                  id: Date.now(),
+                  candidate: candidateName,
+                  role: form.role || 'Any Role',
+                  type: form.type,
+                  interviewer: form.interviewer || 'N/A',
+                  date: form.date || 'TBD',
+                  time: form.time || 'TBD',
+                  status: 'Scheduled',
+                  avatar: candidateName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase()
+                };
+                interviews2.unshift(newInterview);
+                setInterviewList([...interviews2]);
+                setForm({ candidate: '', role: '', type: 'Technical', date: '', time: '', interviewer: '' });
+                setIsModalOpen(false);
+              }}>Schedule</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

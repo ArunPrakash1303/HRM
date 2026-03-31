@@ -92,7 +92,7 @@ export default function LiveCoding() {
                 </div>
                 <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1rem', marginBottom: '12px' }}>Two Sum</h3>
                 <p style={{ color: 'var(--text-sec)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '14px' }}>
-                  Given an array of integers <code style={{ background: 'rgba(26,35,126,0.08)', padding: '1px 5px', borderRadius: '4px', fontSize: '0.78rem' }}>nums</code> and an integer <code style={{ background: 'rgba(26,35,126,0.08)', padding: '1px 5px', borderRadius: '4px', fontSize: '0.78rem' }}>target</code>, return <em>indices of the two numbers such that they add up to target</em>.
+                  Given an array of integers <code style={{ background: 'var(--primary-subtle)', padding: '1px 5px', borderRadius: '4px', fontSize: '0.78rem' }}>nums</code> and an integer <code style={{ background: 'var(--primary-subtle)', padding: '1px 5px', borderRadius: '4px', fontSize: '0.78rem' }}>target</code>, return <em>indices of the two numbers such that they add up to target</em>.
                 </p>
                 <p style={{ color: 'var(--text-sec)', fontSize: '0.82rem', lineHeight: 1.7, marginBottom: '14px' }}>
                   You may assume each input would have exactly one solution, and you may not use the same element twice.

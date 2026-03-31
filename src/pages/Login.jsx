@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import logoLight from '../assets/HRMLogo.png';
+import logoDark from '../assets/DMLogo.png';
 
 export default function Login({ onLogin, isDark, toggleTheme }) {
   const [email, setEmail] = useState('m.arunprakashnkl@gmail.com');
@@ -37,10 +39,26 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
 
       <div className="login-card mx-auto text-start">
         <div className="login-logo mb-4 d-flex align-items-center gap-3">
-          <div className="logo-icon">P</div>
-          <div>
-            <h2 className="mb-0">PeopleOS</h2>
-            <p className="mb-0 text-muted" style={{ fontSize: '0.7rem' }}>HR Management System</p>
+          <img 
+            src={isDark ? logoDark : logoLight} 
+            alt="HRM Logo" 
+            style={{ height: '48px', width: 'auto', objectFit: 'contain' }} 
+            onError={(e) => {
+              e.target.style.display = 'none';
+              if (document.getElementById('fallback-logo-login')) {
+                document.getElementById('fallback-logo-login').style.display = 'flex';
+              }
+            }} 
+          />
+          {/* Fallback styling that EXACTLY matches the text colors and layout of the provided logo if the image isn't loaded */}
+          <div id="fallback-logo-login" style={{ display: 'none', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', fontWeight: 900, fontSize: '38px', letterSpacing: '-0.5px', lineHeight: 1 }}>
+              <span style={{ color: isDark ? '#FFFFFF' : '#003B71' }}>HR</span>
+              <span style={{ color: isDark ? '#FFFFFF' : '#FFC107' }}>M</span>
+            </div>
+            <div style={{ color: isDark ? '#94A3B8' : '#64748B', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.5px', marginTop: '2px' }}>
+              HR MANAGEMENT
+            </div>
           </div>
         </div>
         
@@ -92,7 +110,7 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
           </button>
         </form>
         
-        <div className="demo-box mt-4 p-3 rounded" style={{ background: 'var(--primary-subtle)', border: '1px solid rgba(26,35,126,0.12)' }}>
+        <div className="demo-box mt-4 p-3 rounded" style={{ background: 'var(--primary-subtle)', border: '1px solid var(--primary-subtle)' }}>
           <div className="demo-title fw-bold mb-2" style={{ fontSize: '0.78rem' }}>Demo Credentials</div>
           <p className="mb-1" style={{ fontSize: '0.72rem', color: 'var(--text-sec)' }}>Email: m.arunprakashnkl@gmail.com</p>
           <p className="mb-0" style={{ fontSize: '0.72rem', color: 'var(--text-sec)' }}>Password: Admin</p>

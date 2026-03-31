@@ -14,8 +14,17 @@ import Settings from './Settings';
 
 export default function MainShell({ onLogout, isDark, toggleTheme, setTheme }) {
   const [currentPage, setCurrentPage] = useState('dashboard');
+  const [navContext, setNavContext] = useState(null);
   const [sidebarMini, setSidebarMini] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleNav = (page, ctx = null) => {
+    setCurrentPage(page);
+    setNavContext(ctx);
+    if (window.innerWidth < 900) {
+      closeMobileSidebar();
+    }
+  };
 
   const toggleSidebar = () => {
     if (window.innerWidth < 900) {
@@ -29,25 +38,18 @@ export default function MainShell({ onLogout, isDark, toggleTheme, setTheme }) {
     setMobileOpen(false);
   };
 
-  const navTo = (page) => {
-    setCurrentPage(page);
-    if (window.innerWidth < 900) {
-      closeMobileSidebar();
-    }
-  };
-
   const renderPage = () => {
-    switch(currentPage) {
-      case 'dashboard': return <Dashboard onNav={navTo} />;
-      case 'employees': return <Employees onNav={navTo} />;
-      case 'documents': return <Documents />;
-      case 'recruitment': return <Recruitment />;
-      case 'interviews': return <Interviews onNav={navTo} />;
-      case 'liveinterview': return <LiveInterview />;
-      case 'livecoding': return <LiveCoding />;
-      case 'reports': return <Reports />;
-      case 'settings': return <Settings isDark={isDark} setTheme={setTheme} />;
-      default: return <Dashboard onNav={navTo} />;
+    switch (currentPage) {
+      case 'dashboard': return <Dashboard onNav={handleNav} isDark={isDark} />;
+      case 'employees': return <Employees onNav={handleNav} context={navContext} />;
+      case 'documents': return <Documents onNav={handleNav} />;
+      case 'recruitment': return <Recruitment onNav={handleNav} context={navContext} />;
+      case 'interviews': return <Interviews onNav={handleNav} context={navContext} />;
+      case 'liveinterview': return <LiveInterview onNav={handleNav} />;
+      case 'livecoding': return <LiveCoding onNav={handleNav} />;
+      case 'reports': return <Reports onNav={handleNav} isDark={isDark} />;
+      case 'settings': return <Settings onNav={handleNav} isDark={isDark} setTheme={setTheme} />;
+      default: return <Dashboard onNav={handleNav} isDark={isDark} />;
     }
   };
 
@@ -59,11 +61,12 @@ export default function MainShell({ onLogout, isDark, toggleTheme, setTheme }) {
       ></div>
 
       <Sidebar 
-        currentPage={currentPage}
-        onNav={navTo} 
+        currentPage={currentPage} 
+        onNav={handleNav} 
         onLogout={onLogout} 
-        mini={sidebarMini} 
-        mobileOpen={mobileOpen} 
+        mini={sidebarMini}
+        mobileOpen={mobileOpen}
+        isDark={isDark}
       />
 
       <div className="main">
@@ -71,7 +74,7 @@ export default function MainShell({ onLogout, isDark, toggleTheme, setTheme }) {
           onToggleSidebar={toggleSidebar} 
           toggleTheme={toggleTheme} 
           isDark={isDark} 
-          onNav={navTo}
+          onNav={handleNav}
         />
         
         <main className="content">
@@ -81,7 +84,7 @@ export default function MainShell({ onLogout, isDark, toggleTheme, setTheme }) {
         </main>
       </div>
 
-      <BottomNav currentPage={currentPage} onNav={navTo} />
+      <BottomNav currentPage={currentPage} onNav={handleNav} />
     </div>
   );
 }

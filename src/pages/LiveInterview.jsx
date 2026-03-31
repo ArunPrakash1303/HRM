@@ -129,7 +129,7 @@ export default function LiveInterview() {
                 onChange={e => setChatInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') sendMsg(); }}
               />
-              <button className="icon-btn" onClick={sendMsg} style={{ background: 'rgba(26,35,126,0.1)', color: 'var(--primary)' }}>
+              <button className="icon-btn" onClick={sendMsg} style={{ background: 'var(--primary-subtle)', color: 'var(--primary)' }}>
                 <span className="material-icons" style={{ fontSize: '18px' }}>send</span>
               </button>
             </div>
