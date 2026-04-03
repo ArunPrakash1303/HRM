@@ -54,7 +54,7 @@ function App() {
             <div className="hr-line hr-line-1"></div>
             <div className="hr-line hr-line-2"></div>
           </div>
-          <div className="hr-loader-text">PeopleOS</div>
+          <div className="hr-loader-text">HR Management Tool</div>
         </div>
       ) : (
         isAuthenticated ? (

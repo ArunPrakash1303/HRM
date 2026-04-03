@@ -25,8 +25,8 @@ export default function Dashboard({ onNav, isDark }) {
   const renderTeamList = () => {
     return employees.slice(0, 5).map(e => (
       <div className="team-item" key={e.id}>
-        <div 
-          className="emp-avatar" 
+        <div
+          className="emp-avatar"
           style={{ background: deptColors[e.dept] ? hex2rgba(deptColors[e.dept], 0.12) : 'var(--primary-subtle)', color: deptColors[e.dept] || 'var(--primary)' }}
         >
           {e.avatar}
@@ -46,7 +46,7 @@ export default function Dashboard({ onNav, isDark }) {
     const textColor = isDark ? '#F8FAFC' : '#1E293B';
     const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#FF7A28';
-    
+
     const data = {
       labels: hiringData.map(d => d.m),
       datasets: [
@@ -108,11 +108,11 @@ export default function Dashboard({ onNav, isDark }) {
           <div className="section-title" style={{ marginBottom: 0 }}>Hiring Overview</div>
           <button className="btn btn-outline btn-sm" onClick={() => onNav('reports')}>View report →</button>
         </div>
-        
+
         <div style={{ flex: 1, minHeight: '200px', width: '100%' }}>
           <Bar data={data} options={options} />
         </div>
-        
+
         <div className="flex gap-3 justify-center mt-3">
           <div className="flex items-center gap-2">
             <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: hex2rgba(primaryColor, 0.2) }}></div>
@@ -132,7 +132,7 @@ export default function Dashboard({ onNav, isDark }) {
       <div className="page-header">
         <div className="page-title">
           <div className="breadcrumb">HR › Dashboard</div>
-          <h1>Good morning, Arun 👋</h1>
+          <h1>Good morning, Arun</h1>
           <p>Here's what's happening with your team today.</p>
         </div>
       </div>
@@ -208,7 +208,7 @@ export default function Dashboard({ onNav, isDark }) {
             </div>
           </div>
         </div>
-        
+
         <HiringChart />
       </div>
 
@@ -219,7 +219,7 @@ export default function Dashboard({ onNav, isDark }) {
             <div className="section-title" style={{ marginBottom: 0 }}>Today's Interviews</div>
             <button className="btn btn-outline btn-sm" onClick={() => onNav('interviews')}>Schedule</button>
           </div>
-          
+
           <div className="interview-item">
             <div className="emp-avatar" style={{ background: 'var(--primary-subtle)', color: 'var(--primary)' }}>AK</div>
             <div className="flex-1">
@@ -231,7 +231,7 @@ export default function Dashboard({ onNav, isDark }) {
               <div className="chip chip-scheduled mt-1">Scheduled</div>
             </div>
           </div>
-          
+
           <div className="interview-item">
             <div className="emp-avatar" style={{ background: 'rgba(139,92,246,0.12)', color: '#8B5CF6' }}>MI</div>
             <div className="flex-1">
@@ -243,7 +243,7 @@ export default function Dashboard({ onNav, isDark }) {
               <div className="chip chip-scheduled mt-1">Scheduled</div>
             </div>
           </div>
-          
+
           <div className="interview-item">
             <div className="emp-avatar" style={{ background: 'rgba(16,185,129,0.12)', color: '#10B981' }}>DR</div>
             <div className="flex-1">
@@ -255,7 +255,7 @@ export default function Dashboard({ onNav, isDark }) {
               <div className="chip chip-completed mt-1">Completed</div>
             </div>
           </div>
-          
+
           <div className="interview-item">
             <div className="emp-avatar" style={{ background: 'rgba(245,158,11,0.12)', color: '#F59E0B' }}>PS</div>
             <div className="flex-1">
@@ -275,7 +275,7 @@ export default function Dashboard({ onNav, isDark }) {
             <div className="section-title" style={{ marginBottom: 0 }}>Candidate Pipeline</div>
             <button className="btn btn-outline btn-sm" onClick={() => onNav('recruitment')}>View all</button>
           </div>
-          
+
           <div className="pipeline-bar">
             <div className="pipeline-info">
               <span className="text-sm font-semibold">Applied</span>
@@ -312,9 +312,9 @@ export default function Dashboard({ onNav, isDark }) {
               <div className="pipeline-bar-fill" style={{ width: '21%', background: '#10B981' }}></div>
             </div>
           </div>
-          
+
           <div className="divider"></div>
-          
+
           <div className="section-title">Recent Activity</div>
           <div className="flex items-start gap-3 mb-3">
             <div className="activity-dot" style={{ background: 'var(--primary)' }}></div>

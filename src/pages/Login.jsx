@@ -42,44 +42,45 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
         <div className="new-login-left">
           <div className="new-login-header">
             <div className="new-logo">
-              <div className="new-logo-icon"></div>
-              <span>System logo</span>
+              {/* <div className="new-logo-icon"></div> */}
+              {/* <span>System logo</span> */}
+              <img src="src/assets/DMLogo.png" alt="Logo" className='img-fluid' width={"150"} />
             </div>
           </div>
-          
+
           <div className="new-login-body stagger-fade-in">
-            <h1>Welcome to login system</h1>
-            <p className="subtitle">Sign in by entering the information below</p>
-            
+            <h1>Login</h1>
+            <p className="subtitle">Login with HR Email ID</p>
+
             {error && <div className="alert alert-error show mb-3">{error}</div>}
-            
+
             <form onSubmit={handleSubmit} className="new-login-form">
               <div className="input-with-icon">
                 <span className="material-icons input-icon-left">person_outline</span>
-                <input 
-                  type="email" 
-                  value={email} 
-                  onChange={e => setEmail(e.target.value)} 
-                  placeholder="Designer" 
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="Designer"
                 />
               </div>
-              
+
               <div className="input-with-icon">
                 <span className="material-icons input-icon-left">lock_outline</span>
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  value={password} 
-                  onChange={e => setPassword(e.target.value)} 
-                  placeholder="••••••••" 
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
                 />
-                <span 
-                  className="material-icons input-icon-right" 
+                <span
+                  className="material-icons input-icon-right"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? 'visibility_off' : 'visibility'}
                 </span>
               </div>
-              
+
               <div className="new-form-actions">
                 <label className="checkbox-label">
                   <input type="checkbox" defaultChecked />
@@ -87,7 +88,7 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
                 </label>
                 <a href="#" className="forgot-pwd">Forgot Password?</a>
               </div>
-              
+
               <div className="new-button-group">
                 <button type="submit" className="new-btn-login" disabled={loading}>
                   {loading ? (
@@ -106,7 +107,7 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
             </div>
           </div>
         </div>
-        
+
         {/* Right Section */}
         <div className="new-login-right">
           <div className="shape-bg-lightest"></div>
