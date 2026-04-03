@@ -45,16 +45,16 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
               {/* <div className="new-logo-icon"></div> */}
               {/* <span>System logo</span> */}
               <img
-                src={isDark ? logoDark : logoLight}
+                src="src/assets/DMLogo.png"
                 alt="HRM Logo"
-                style={{ height: '20px', width: 'auto', objectFit: 'contain' }}
+                style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
                 onError={(e) => {
                   e.target.style.display = 'none';
                   if (document.getElementById('fallback-logo')) {
                     document.getElementById('fallback-logo').style.display = 'flex';
                   }
-                }}
-              />
+                }} />
+                {/* <img src="src/assets/DMLogo.png" alt="Logo" className='img-fluid' width={"150"} /> */}
             </div>
           </div>
 
