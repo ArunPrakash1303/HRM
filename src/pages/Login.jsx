@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import laptopImg from '../assets/Laptop.png';
+import dmLogo from '../assets/DMLogo.png';
 
 export default function Login({ onLogin, isDark, toggleTheme }) {
   const [email, setEmail] = useState('m.arunprakashnkl@gmail.com');
@@ -45,16 +46,11 @@ export default function Login({ onLogin, isDark, toggleTheme }) {
               {/* <div className="new-logo-icon"></div> */}
               {/* <span>System logo</span> */}
               <img
-                src="src/assets/DMLogo.png"
+                src={dmLogo}
                 alt="HRM Logo"
-                style={{ height: '42px', width: 'auto', objectFit: 'contain' }}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  if (document.getElementById('fallback-logo')) {
-                    document.getElementById('fallback-logo').style.display = 'flex';
-                  }
-                }} />
-                {/* <img src="src/assets/DMLogo.png" alt="Logo" className='img-fluid' width={"150"} /> */}
+                style={{ height: '42px', width: 'auto' }}
+              />
+              {/* <img src={dmLogo} alt="Logo" className='img-fluid' width={"150"} /> */}
             </div>
           </div>
 
